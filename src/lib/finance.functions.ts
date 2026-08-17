@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { generateText, Output } from "ai";
-import { createLovableAiGatewayProvider } from "./ai-gateway.server";
+import { createWorkersAI } from "workers-ai-provider";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
 // ---------- Schemas ----------
@@ -370,13 +370,13 @@ export const getAiInsights = createServerFn({ method: "POST" })
       })
       .parse(input),
   )
-  .handler(async ({ data, context }) => {
-    const key = process.env["LOVABLE_API_KEY"];
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+  .handler(async ({ data }) => {
+    const workersai = createWorkersAI({
+      binding: (globalThis as any).AI,
+    });
 
-    const gateway = createLovableAiGatewayProvider(key);
     const { output } = await generateText({
-      model: gateway("google/gemini-3.6-flash"),
+      model: workersai("@cf/zai-org/glm-4.7-flash"),
       output: Output.object({
         schema: z.object({
           insights: z.array(
@@ -389,7 +389,7 @@ export const getAiInsights = createServerFn({ method: "POST" })
           ),
         }),
       }),
-      prompt: `You are a helpful personal finance analyst. Analyze the following transactions and provide 1-2 concise, actionable insights. Focus on spending patterns, unusual changes, and simple savings opportunities. Keep each insight under 2 sentences. Be specific with dollar amounts when possible.
+      prompt: `You are a helpful personal finance analyst. Analyze the following transactions and provide 1-2 concise, actionable insights. Focus on spending patterns, unusual changes, and simple savings opportunities. Keep each insight under 2 sentences.
 
 Transactions:
 ${JSON.stringify(data.transactions, null, 2)}`,
@@ -403,13 +403,13 @@ ${JSON.stringify(data.transactions, null, 2)}`,
 export const scanReceipt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => ScanReceiptSchema.parse(input))
-  .handler(async ({ data, context }) => {
-    const key = process.env["LOVABLE_API_KEY"];
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
+  .handler(async ({ data }) => {
+    const workersai = createWorkersAI({
+      binding: (globalThis as any).AI,
+    });
 
-    const gateway = createLovableAiGatewayProvider(key);
     const { output } = await generateText({
-      model: gateway("google/gemini-2.5-pro"),
+      model: workersai("@cf/moonshotai/kimi-k2.7-code"),
       output: Output.object({
         schema: z.object({
           merchant: z.string().nullable(),
@@ -428,7 +428,10 @@ export const scanReceipt = createServerFn({ method: "POST" })
               type: "text",
               text: "Extract the merchant name, total amount, category, date, and a short description from this receipt. Return the date as YYYY-MM-DD if visible. Choose a category from common ones like Groceries, Food & Drink, Entertainment, Transportation, Utilities, Healthcare, Shopping, Travel, or other. Rate your confidence as high/medium/low.",
             },
-            { type: "image", image: data.imageBase64 },
+            {
+              type: "image",
+              image: data.imageBase64,
+            },
           ],
         },
       ],
