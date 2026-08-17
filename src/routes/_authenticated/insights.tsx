@@ -28,7 +28,9 @@ export const Route = createFileRoute("/_authenticated/insights")({
 function InsightsPage() {
   const { data: transactions } = useSuspenseQuery(transactionsQueryOptions);
   const getInsights = useServerFn(getAiInsights);
-  const [insights, setInsights] = useState<{ title: string; description: string; action?: string; amount?: number }[]>([]);
+  const [insights, setInsights] = useState<
+  { title: string; description: string; action?: string | undefined; amount?: number | undefined }[]
+>([]);
   const [loading, setLoading] = useState(false);
 
   async function generateInsights() {
