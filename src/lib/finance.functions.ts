@@ -372,7 +372,7 @@ export const getAiInsights = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const workersai = createWorkersAI({
-      binding: (globalThis as any).AI,
+      binding: (globalThis as any).__env__.AI,
     });
 
     const { output } = await generateText({
@@ -405,7 +405,7 @@ export const scanReceipt = createServerFn({ method: "POST" })
   .inputValidator((input) => ScanReceiptSchema.parse(input))
   .handler(async ({ data }) => {
     const workersai = createWorkersAI({
-      binding: (globalThis as any).AI,
+      binding: (globalThis as any).__env__.AI,
     });
 
     const { output } = await generateText({
