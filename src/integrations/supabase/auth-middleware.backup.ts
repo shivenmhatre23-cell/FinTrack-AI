@@ -35,12 +35,6 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
     
     const SUPABASE_URL = process.env['SUPABASE_URL'];
     const SUPABASE_PUBLISHABLE_KEY = process.env['SUPABASE_PUBLISHABLE_KEY'];
-    console.log('[Supabase] runtime check', {
-      hasUrl: Boolean(SUPABASE_URL),
-      urlHost: SUPABASE_URL ? new URL(SUPABASE_URL).host : null,
-      hasKey: Boolean(SUPABASE_PUBLISHABLE_KEY),
-      keyPrefix: SUPABASE_PUBLISHABLE_KEY?.slice(0, 15),
-    });
 
     if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
       const missing = [
@@ -95,29 +89,14 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
       }
     );
 
-  const { data, error } = await supabase.auth.getUser(token);
+    const { data, error } = await supabase.auth.getClaims(token);
+    if (error || !data?.claims) {
+      throw new Error('Unauthorized: Invalid token');
+    }
 
-if (error || !data?.user) {
-  console.error('[Supabase] getUser error:', {
-    message: error?.message,
-    name: error?.name,
-    status: error?.status,
-  });
-
-  throw new Error('Unauthorized: Invalid token');
-}
-
-const user = data.user;
-
-return next({
-  context: {
-    supabase,
-    userId: user.id,
-    claims: {
-      sub: user.id,
-    },
-  },
-});
+    if (!data.claims.sub) {
+      throw new Error('Unauthorized: No user ID found in token');
+    }
 
     return next({
       context: {
@@ -128,4 +107,3 @@ return next({
     });
   },
 );
-
