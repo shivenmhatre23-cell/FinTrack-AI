@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -29,7 +29,7 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate({ from: "/auth" });
+  const router = useRouter();
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -53,7 +53,8 @@ function AuthPage() {
 
         if (error) throw error;
 
-        navigate({ to: "/dashboard" });
+        await router.invalidate();
+        await router.navigate({ to: "/dashboard" });
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Authentication failed");
@@ -61,7 +62,25 @@ function AuthPage() {
       setLoading(false);
     }
   }
+  async function handleGuestSignIn() {
+    setLoading(true);
 
+    try {
+      const { error } = await supabase.auth.signInAnonymously();
+
+      if (error) throw error;
+
+      toast.success("Welcome to FinTrack AI!");
+      await router.invalidate();
+      await router.navigate({ to: "/dashboard" });
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Guest sign-in failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
   async function handleGoogleSignIn() {
     setLoading(true);
 
@@ -108,7 +127,15 @@ function AuthPage() {
             <Chrome className="h-4 w-4" />
             Continue with Google
           </button>
-
+          <button
+            onClick={handleGuestSignIn}
+            disabled={loading}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent disabled:opacity-50"
+          >
+            Continue as Guest
+            {!loading && <ArrowRight className="h-4 w-4" />}
+          </button>
+          
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border" />
