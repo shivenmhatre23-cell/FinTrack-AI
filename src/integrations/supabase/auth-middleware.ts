@@ -94,38 +94,39 @@ export const requireSupabaseAuth = createMiddleware({ type: 'function' }).server
         },
       }
     );
+  const authStart = performance.now();
+console.log("[Supabase Auth] getClaims started");
 
-  const { data, error } = await supabase.auth.getUser(token);
+const { data, error } = await supabase.auth.getClaims(token);
 
-if (error || !data?.user) {
-  console.error('[Supabase] getUser error:', {
+const authDuration = Math.round(performance.now() - authStart);
+
+console.log(
+  "[Supabase Auth] getClaims finished:",
+  `${authDuration}ms`
+);
+
+if (error || !data?.claims?.sub) {
+  console.error("[Supabase] getClaims error:", {
     message: error?.message,
-    name: error?.name,
-    status: error?.status,
   });
 
-  throw new Error('Unauthorized: Invalid token');
+  throw new Error("Unauthorized: Invalid token");
 }
 
-const user = data.user;
+const userId = data.claims.sub;
 
 return next({
   context: {
     supabase,
-    userId: user.id,
+    userId,
     claims: {
-      sub: user.id,
+      sub: userId,
     },
   },
 });
 
-    return next({
-      context: {
-        supabase,
-        userId: data.claims.sub,
-        claims: data.claims,
-      },
-    });
+    
   },
 );
 

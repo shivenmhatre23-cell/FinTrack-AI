@@ -123,11 +123,21 @@ export const getTransactions = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabase, userId } = context;
+
+    const dbStart = performance.now();
+
     const { data, error } = await supabase
       .from("transactions")
       .select("*")
       .eq("user_id", userId)
-      .order("date", { ascending: false });
+      .order("date", { ascending: false })
+      .limit(50);
+
+    console.log(
+      "[Transactions] Supabase query:",
+      `${Math.round(performance.now() - dbStart)}ms`
+    );
+
     if (error) throw error;
     return data;
   });
