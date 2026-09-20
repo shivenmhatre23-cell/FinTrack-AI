@@ -960,32 +960,67 @@ body {
 
   .layout-split,
   .layout-2col {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 16px;
     margin-bottom: 16px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .layout-split > *,
+  .layout-2col > * {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .panel {
     padding: 16px 14px;
     border-radius: var(--radius-md);
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
     box-sizing: border-box;
   }
 
   .panel-header {
-    flex-wrap: wrap;
-    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .panel-header .btn {
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 1rem;
+    min-width: 0;
   }
 
   /* Data list items on mobile */
+  .data-list {
+    width: 100%;
+    min-width: 0;
+  }
+
   .list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 12px 0;
     border-bottom: 1px solid var(--border);
-    gap: 12px;
+    gap: 10px;
     width: 100%;
+    min-width: 0;
     box-sizing: border-box;
   }
 
@@ -995,17 +1030,21 @@ body {
     gap: 10px;
     min-width: 0;
     flex: 1;
+    overflow: hidden;
   }
 
+  .item-details,
   .list-left > div:not(.item-icon) {
     min-width: 0;
     flex: 1;
+    overflow: hidden;
   }
 
   .item-icon {
     width: 34px;
     height: 34px;
     min-width: 34px;
+    max-width: 34px;
     flex-shrink: 0;
   }
 
@@ -1016,6 +1055,8 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
   }
 
   .item-desc {
@@ -1025,6 +1066,8 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
   }
 
   .item-amount {
@@ -1033,6 +1076,7 @@ body {
     white-space: nowrap;
     flex-shrink: 0;
     text-align: right;
+    margin-left: auto;
   }
 
   /* Form inputs 16px to prevent iOS auto-zoom viewport jump */

@@ -670,12 +670,12 @@ function renderDashboard() {
       <div class="list-item">
         <div class="list-left">
           <div class="item-icon" style="background-color: rgba(184, 255, 61, 0.06); border-color: rgba(184, 255, 61, 0.15); color: var(--accent-primary);"><i data-lucide="receipt"></i></div>
-          <div>
+          <div class="item-details" style="min-width: 0; flex: 1; overflow: hidden;">
             <div class="item-name">${escapeHtml(t.merchant || t.description || t.category)}</div>
             <div class="item-desc">${escapeHtml(t.category)} • ${formatDate(t.date)}</div>
           </div>
         </div>
-        <div class="item-amount ${t.type}">
+        <div class="item-amount ${t.type}" style="flex-shrink: 0; text-align: right; margin-left: 8px;">
           ${t.type === "income" ? "+" : "-"}${formatCurrency(t.amount)}
         </div>
       </div>
@@ -699,14 +699,14 @@ function renderDashboard() {
         const pct = monthSpending > 0 ? Math.min(100, Math.round((amt / monthSpending) * 100)) : 0;
         return `
         <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <div style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color};"></div>
-              <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-main);">${escapeHtml(cat)}</span>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1; overflow: hidden;">
+              <div style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color}; flex-shrink: 0;"></div>
+              <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(cat)}</span>
             </div>
-            <span style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">${formatCurrency(amt)}</span>
+            <span style="font-size: 0.875rem; font-weight: 700; color: var(--text-main); flex-shrink: 0; text-align: right;">${formatCurrency(amt)}</span>
           </div>
-          <div class="progress-bar-container" style="height: 4px; margin: 0; background: var(--bg-secondary);">
+          <div class="progress-bar-container" style="height: 4px; margin: 0; background: var(--bg-secondary); width: 100%;">
             <div class="progress-bar" style="width: ${pct}%; background-color: ${color}; border-radius: 9999px;"></div>
           </div>
         </div>
@@ -725,11 +725,11 @@ function renderDashboard() {
       .map(
         (b) => `
       <div class="list-item" style="padding: 8px 0;">
-        <div>
+        <div style="min-width: 0; flex: 1; overflow: hidden;">
           <div class="item-name" style="font-size: 0.85rem;">${escapeHtml(b.name)}</div>
           <div class="item-desc">Due ${formatDate(b.due_date)}</div>
         </div>
-        <span style="font-size: 0.85rem; font-weight: 600;">${formatCurrency(b.amount)}</span>
+        <span style="font-size: 0.85rem; font-weight: 600; flex-shrink: 0; text-align: right; margin-left: 8px;">${formatCurrency(b.amount)}</span>
       </div>
     `
       )
@@ -799,15 +799,15 @@ function renderTransactions() {
   container.innerHTML = state.transactions
     .map(
       (t) => `
-    <div class="list-item" style="padding: 16px 0;">
+    <div class="list-item" style="padding: 14px 0;">
       <div class="list-left">
         <div class="item-icon"><i data-lucide="receipt"></i></div>
-        <div>
+        <div class="item-details" style="min-width: 0; flex: 1; overflow: hidden;">
           <div class="item-name">${escapeHtml(t.merchant || t.description || t.category)}</div>
           <div class="item-desc">${escapeHtml(t.category)} • ${formatDate(t.date)} ${t.description ? "— " + escapeHtml(t.description) : ""}</div>
         </div>
       </div>
-      <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 8px;">
         <span class="item-amount ${t.type}">${t.type === "income" ? "+" : "-"}${formatCurrency(t.amount)}</span>
         <button class="btn-danger-ghost" onclick="deleteTransaction('${t.id}')" title="Delete transaction">
           <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
