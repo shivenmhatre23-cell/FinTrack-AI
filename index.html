@@ -51,6 +51,11 @@
   }
   </script>
 
+  <!-- Typography: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <!-- Stylesheets & Favicon -->
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="public/favicon.ico" />
@@ -70,7 +75,7 @@
       </button>
       <div class="sidebar-brand" style="border: none; padding: 0;">
         <div class="brand-icon"><i data-lucide="wallet"></i></div>
-        <span class="brand-name">FinTrack AI</span>
+        <span class="brand-name"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
       </div>
       <div style="width: 32px;"></div>
     </header>
@@ -84,7 +89,7 @@
         <div class="brand-icon">
           <i data-lucide="wallet"></i>
         </div>
-        <span class="brand-name">FinTrack AI</span>
+        <span class="brand-name"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
       </div>
 
       <nav class="sidebar-nav">
@@ -158,11 +163,11 @@
           <div class="auth-wrapper">
             <div class="auth-card">
               <div class="auth-header">
-                <div class="brand-icon" style="width: 48px; height: 48px; margin: 0 auto 14px;">
-                  <i data-lucide="wallet" style="width: 24px; height: 24px;"></i>
+                <div class="brand-icon" style="width: 52px; height: 52px; margin: 0 auto 16px;">
+                  <i data-lucide="wallet" style="width: 26px; height: 26px;"></i>
                 </div>
-                <h2 id="auth-view-title">Welcome to FinTrack AI</h2>
-                <p id="auth-view-subtitle">Sign in to track your expenses, manage budgets, and get AI insights.</p>
+                <h2 id="auth-view-title">Your Money. <span style="color: var(--accent-primary);">Smarter with AI.</span></h2>
+                <p id="auth-view-subtitle">Linear-grade personal finance tracking, category budgets, and instant AI spending insights.</p>
               </div>
 
               <!-- Google Sign-In Button -->
@@ -173,7 +178,7 @@
                   <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                 </svg>
-                <span style="font-weight: 500;">Continue with Google</span>
+                <span style="font-weight: 600;">Continue with Google</span>
               </button>
 
               <!-- Guest Button -->
@@ -183,7 +188,7 @@
 
               <div style="position: relative; text-align: center; margin: 16px 0 20px;">
                 <hr style="border-color: var(--border);" />
-                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--bg-card); padding: 0 10px; font-size: 0.72rem; color: var(--text-subtle);">OR USE EMAIL</span>
+                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--bg-card); padding: 0 10px; font-size: 0.72rem; color: var(--text-subtle); letter-spacing: 0.05em;">OR USE EMAIL</span>
               </div>
 
               <div style="display: flex; gap: 8px; margin-bottom: 16px;">
@@ -201,7 +206,7 @@
                   <input type="password" id="page-auth-password" class="form-control" required minlength="6" placeholder="••••••••" />
                 </div>
                 <button type="submit" id="btn-page-auth-submit" class="btn btn-primary" style="width: 100%; padding: 11px; font-size: 0.92rem;">
-                  Sign In
+                  Sign In →
                 </button>
               </form>
             </div>
@@ -215,37 +220,37 @@
             <div class="metric-card">
               <div class="metric-header">
                 <span class="metric-title">Net worth</span>
-                <div class="metric-icon-wrap"><i data-lucide="landmark" style="color: #60a5fa;"></i></div>
+                <div class="metric-icon-wrap"><i data-lucide="landmark" style="color: var(--accent-primary);"></i></div>
               </div>
               <div class="metric-value" id="dash-net-worth">$0.00</div>
-              <div class="metric-subtitle">All time income minus expenses</div>
+              <div class="metric-subtitle" id="dash-net-worth-sub">All time income minus expenses</div>
             </div>
 
             <div class="metric-card">
               <div class="metric-header">
                 <span class="metric-title">This month income</span>
-                <div class="metric-icon-wrap"><i data-lucide="arrow-up-right" style="color: #10b981;"></i></div>
+                <div class="metric-icon-wrap"><i data-lucide="arrow-up-right" style="color: var(--accent-primary);"></i></div>
               </div>
-              <div class="metric-value" id="dash-monthly-income" style="color: #10b981;">$0.00</div>
-              <div class="metric-subtitle">Current month total</div>
+              <div class="metric-value" id="dash-monthly-income" style="color: var(--accent-primary);">$0.00</div>
+              <div class="metric-subtitle" id="dash-monthly-income-sub">Current month total</div>
             </div>
 
             <div class="metric-card">
               <div class="metric-header">
                 <span class="metric-title">This month spending</span>
-                <div class="metric-icon-wrap"><i data-lucide="arrow-down-right" style="color: #f87171;"></i></div>
+                <div class="metric-icon-wrap" style="background-color: rgba(255, 92, 108, 0.08); border-color: rgba(255, 92, 108, 0.2);"><i data-lucide="arrow-down-right" style="color: var(--accent-danger);"></i></div>
               </div>
-              <div class="metric-value" id="dash-monthly-spending">$0.00</div>
-              <div class="metric-subtitle">Total expenses this month</div>
+              <div class="metric-value" id="dash-monthly-spending" style="color: var(--accent-danger);">$0.00</div>
+              <div class="metric-subtitle" id="dash-monthly-spending-sub">Total expenses this month</div>
             </div>
 
             <div class="metric-card">
               <div class="metric-header">
                 <span class="metric-title">Savings rate</span>
-                <div class="metric-icon-wrap"><i data-lucide="piggy-bank" style="color: #a78bfa;"></i></div>
+                <div class="metric-icon-wrap" style="background-color: rgba(110, 231, 183, 0.08); border-color: rgba(110, 231, 183, 0.2);"><i data-lucide="piggy-bank" style="color: var(--accent-secondary);"></i></div>
               </div>
-              <div class="metric-value" id="dash-savings-rate">—</div>
-              <div class="metric-subtitle">Income not spent</div>
+              <div class="metric-value" id="dash-savings-rate" style="color: var(--accent-secondary);">—</div>
+              <div class="metric-subtitle" id="dash-savings-rate-sub">Income not spent</div>
             </div>
           </div>
 
@@ -381,14 +386,17 @@
 
         <!-- 6. AI INSIGHTS VIEW -->
         <section id="view-insights" class="view-section">
-          <div class="panel" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent); border-color: rgba(59, 130, 246, 0.25); margin-bottom: 28px;">
+          <div class="panel ai-gradient-card" style="margin-bottom: 28px;">
             <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-              <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: #60a5fa;">
+              <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(184, 255, 61, 0.12); border: 1px solid rgba(184, 255, 61, 0.25); display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
                 <i data-lucide="sparkles" style="width: 24px; height: 24px;"></i>
               </div>
               <div style="flex: 1; min-width: 240px;">
-                <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 4px;">Generate AI Insights</h2>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Our free Cloudflare Workers AI analyzes your spending habits and spots instant savings opportunities.</p>
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                  <h2 style="font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em;">Generate AI Insights</h2>
+                  <span class="ai-badge">✦ AI Model</span>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Cloudflare Workers AI analyzes your spending patterns and reveals instant savings opportunities.</p>
               </div>
               <button id="btn-generate-ai" class="btn btn-primary" onclick="generateInsights()">
                 <i data-lucide="sparkles"></i>
@@ -399,9 +407,9 @@
 
           <div id="insights-container" class="grid-cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
             <div class="panel" style="grid-column: 1 / -1; text-align: center; padding: 48px 24px;">
-              <i data-lucide="lightbulb" style="width: 32px; height: 32px; color: var(--text-subtle); margin-bottom: 12px;"></i>
-              <p style="font-size: 0.95rem; font-weight: 600;">No insights generated yet</p>
-              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">Click "Analyze spending" above to run free AI analysis on your transactions.</p>
+              <i data-lucide="lightbulb" style="width: 32px; height: 32px; color: var(--accent-primary); margin-bottom: 12px;"></i>
+              <p style="font-size: 0.95rem; font-weight: 700;">No insights generated yet</p>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 4px;">Click "Analyze spending" above to run AI financial analysis on your transactions.</p>
             </div>
           </div>
         </section>
@@ -409,8 +417,8 @@
         <!-- 7. EXPORT VIEW -->
         <section id="view-export" class="view-section">
           <div style="display: flex; justify-content: center; align-items: center; min-height: 50vh;">
-            <div class="panel" style="max-width: 480px; width: 100%; text-align: center; padding: 40px 32px;">
-              <div style="width: 54px; height: 54px; border-radius: var(--radius-md); background: rgba(59, 130, 246, 0.12); display: flex; align-items: center; justify-content: center; color: #60a5fa; margin: 0 auto 16px;">
+            <div class="panel card-glass" style="max-width: 480px; width: 100%; text-align: center; padding: 40px 32px; box-shadow: 0 0 50px rgba(184, 255, 61, 0.06);">
+              <div style="width: 54px; height: 54px; border-radius: var(--radius-md); background: rgba(184, 255, 61, 0.10); border: 1px solid rgba(184, 255, 61, 0.25); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); margin: 0 auto 16px;">
                 <i data-lucide="file-text" style="width: 28px; height: 28px;"></i>
               </div>
               <h2 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 8px;">Export your finances</h2>

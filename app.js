@@ -39,6 +39,25 @@ const CATEGORIES = {
   income: ["Salary", "Freelance", "Investments", "Dividends"],
 };
 
+// Midnight + Electric Lime Category Palette (Specification Section 11)
+const CATEGORY_COLORS = {
+  "Groceries": "#F59E0B",
+  "Food & Drink": "#F59E0B",
+  "Shopping": "#A78BFA",
+  "Transportation": "#22D3EE",
+  "Travel": "#22D3EE",
+  "Rent & Housing": "#FB7185",
+  "Bills": "#FB7185",
+  "Entertainment": "#A78BFA",
+  "Utilities": "#6EE7B7",
+  "Healthcare": "#6EE7B7",
+  "Salary": "#B8FF3D",
+  "Freelance": "#B8FF3D",
+  "Investments": "#B8FF3D",
+  "Dividends": "#B8FF3D",
+  "Other": "#64707A",
+};
+
 // Sample Demo Data (Loaded when offline or starting out)
 const DEFAULT_TRANSACTIONS = [
   { id: "1", amount: 3200, type: "income", category: "Salary", merchant: "Acme Corp", description: "Monthly salary", date: getOffsetDate(-2) },
@@ -584,11 +603,34 @@ function renderDashboard() {
   const netWorth = totalIncome - totalExpenses;
   const savingsRate = monthIncome > 0 ? Math.round(((monthIncome - monthSpending) / monthIncome) * 100) : null;
 
-  // Metric Cards
+  // Metric Cards (Section 8: Midnight + Electric Lime)
   document.getElementById("dash-net-worth").innerText = formatCurrency(netWorth);
+  const netWorthSub = document.getElementById("dash-net-worth-sub");
+  if (netWorthSub) {
+    netWorthSub.innerHTML = netWorth >= 0
+      ? `<span class="pill-growth">+${formatCurrency(netWorth)}</span> all-time balance`
+      : `<span class="pill-expense">-${formatCurrency(Math.abs(netWorth))}</span> all-time deficit`;
+  }
+
   document.getElementById("dash-monthly-income").innerText = formatCurrency(monthIncome);
+  const monthlyIncSub = document.getElementById("dash-monthly-income-sub");
+  if (monthlyIncSub) {
+    monthlyIncSub.innerHTML = `<span class="pill-growth">+${formatCurrency(monthIncome)}</span> this month`;
+  }
+
   document.getElementById("dash-monthly-spending").innerText = formatCurrency(monthSpending);
+  const monthlyExpSub = document.getElementById("dash-monthly-spending-sub");
+  if (monthlyExpSub) {
+    monthlyExpSub.innerHTML = `<span class="pill-expense">-${formatCurrency(monthSpending)}</span> this month`;
+  }
+
   document.getElementById("dash-savings-rate").innerText = savingsRate !== null ? `${savingsRate}%` : "—";
+  const savingsRateSub = document.getElementById("dash-savings-rate-sub");
+  if (savingsRateSub) {
+    savingsRateSub.innerHTML = savingsRate !== null
+      ? `<span class="pill-growth">${savingsRate}%</span> saved this month`
+      : "Income not spent";
+  }
 
   // Recent Transactions (limit 5)
   const recentList = document.getElementById("dash-recent-transactions");
@@ -601,7 +643,7 @@ function renderDashboard() {
         (t) => `
       <div class="list-item">
         <div class="list-left">
-          <div class="item-icon"><i data-lucide="receipt"></i></div>
+          <div class="item-icon" style="background-color: rgba(184, 255, 61, 0.06); border-color: rgba(184, 255, 61, 0.15); color: var(--accent-primary);"><i data-lucide="receipt"></i></div>
           <div>
             <div class="item-name">${escapeHtml(t.merchant || t.description || t.category)}</div>
             <div class="item-desc">${escapeHtml(t.category)} • ${formatDate(t.date)}</div>
@@ -616,24 +658,34 @@ function renderDashboard() {
       .join("");
   }
 
-  // Top Spending
+  // Top Spending (Sections 10 & 11)
   const topSpendContainer = document.getElementById("dash-top-spending");
   const topCategories = Object.entries(spendingByCat)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 3);
+    .slice(0, 4);
 
   if (topCategories.length === 0) {
     topSpendContainer.innerHTML = `<p style="color: var(--text-subtle); font-size: 0.85rem;">No spending recorded this month.</p>`;
   } else {
     topSpendContainer.innerHTML = topCategories
-      .map(
-        ([cat, amt]) => `
-      <div class="list-item" style="padding: 8px 0;">
-        <span style="font-size: 0.875rem;">${escapeHtml(cat)}</span>
-        <span style="font-size: 0.875rem; font-weight: 600;">${formatCurrency(amt)}</span>
-      </div>
-    `
-      )
+      .map(([cat, amt]) => {
+        const color = CATEGORY_COLORS[cat] || "#64707A";
+        const pct = monthSpending > 0 ? Math.min(100, Math.round((amt / monthSpending) * 100)) : 0;
+        return `
+        <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 8px; height: 8px; border-radius: 50%; background-color: ${color}; box-shadow: 0 0 6px ${color};"></div>
+              <span style="font-size: 0.875rem; font-weight: 500; color: var(--text-main);">${escapeHtml(cat)}</span>
+            </div>
+            <span style="font-size: 0.875rem; font-weight: 700; color: var(--text-main);">${formatCurrency(amt)}</span>
+          </div>
+          <div class="progress-bar-container" style="height: 4px; margin: 0; background: var(--bg-secondary);">
+            <div class="progress-bar" style="width: ${pct}%; background-color: ${color}; border-radius: 9999px;"></div>
+          </div>
+        </div>
+      `;
+      })
       .join("");
   }
 
@@ -867,7 +919,7 @@ function renderBills() {
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <span style="font-weight: 600;">${formatCurrency(b.amount)}</span>
-          <button class="btn btn-outline btn-sm" onclick="markBillPaid('${b.id}')" title="Mark as paid" style="color: #10b981;">
+          <button class="btn btn-outline btn-sm" onclick="markBillPaid('${b.id}')" title="Mark as paid" style="color: var(--accent-primary); border-color: rgba(184, 255, 61, 0.3);">
             <i data-lucide="check" style="width: 14px;"></i> Pay
           </button>
           <button class="btn-danger-ghost" onclick="deleteBill('${b.id}')" title="Delete bill">
@@ -889,7 +941,7 @@ function renderBills() {
       <div class="list-item">
         <div>
           <div class="item-name" style="text-decoration: line-through; opacity: 0.7;">${escapeHtml(b.name)}</div>
-          <div class="item-desc" style="color: #10b981;">Paid</div>
+          <div class="item-desc" style="color: var(--accent-primary); font-weight: 600;">Paid ✓</div>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <span style="font-weight: 500; color: var(--text-muted);">${formatCurrency(b.amount)}</span>
@@ -1154,23 +1206,23 @@ async function generateInsights() {
       result = generateClientSideInsights(state.transactions);
     }
 
-    // Render insights
+    // Render insights (Section 9: Lime + Mint gradient AI card)
     container.innerHTML = result.insights
       .map(
         (item) => `
-      <div class="panel" style="margin-bottom: 0;">
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-          <i data-lucide="sparkles" style="color: var(--accent-primary); width: 18px;"></i>
-          <h3 style="font-size: 1rem; font-weight: 600;">${escapeHtml(item.title)}</h3>
+      <div class="panel ai-gradient-card" style="margin-bottom: 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span class="ai-badge"><i data-lucide="sparkles" style="width: 13px; height: 13px;"></i> ✦ AI Insight</span>
         </div>
-        <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 12px;">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main);">${escapeHtml(item.title)}</h3>
+        <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
           ${escapeHtml(item.description)}
         </p>
         ${
           item.action
-            ? `<div style="font-size: 0.8rem; font-weight: 600; color: #60a5fa; display: flex; align-items: center; gap: 4px;">
+            ? `<div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 5px;">
                 <span>${escapeHtml(item.action)}</span>
-                <i data-lucide="arrow-right" style="width: 14px;"></i>
+                <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i>
                </div>`
             : ""
         }
