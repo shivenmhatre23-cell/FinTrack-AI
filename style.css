@@ -279,14 +279,35 @@ body {
 /* Mobile Header */
 .mobile-header {
   display: none;
+}
+
+.mobile-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(17, 23, 29, 0.8);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background-color: var(--bg-primary);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 30;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-icon-btn:hover,
+.mobile-icon-btn:active {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* Top App Header */
@@ -846,6 +867,13 @@ body {
 }
 
 @media (max-width: 768px) {
+  .app-container {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
   .sidebar {
     transform: translateX(-100%);
     width: 280px;
@@ -862,40 +890,67 @@ body {
   }
 
   .main-content {
-    margin-left: 0;
-    width: 100%;
-    min-width: 0;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
   }
 
   .mobile-header {
     display: flex;
-    padding: max(12px, env(safe-area-inset-top, 12px)) 16px 12px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 56px;
+    padding: 0 16px;
     background: rgba(8, 11, 15, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-sizing: border-box;
   }
 
-  /* Prevent sticky collision between mobile-header and app-header */
+  /* Compact header on mobile */
   .app-header {
+    display: flex;
     position: static;
-    padding: 14px 16px;
+    padding: 16px 16px 4px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 4px;
     background: transparent;
     backdrop-filter: none;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .header-title h1 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
   }
 
   .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: none;
   }
 
   .content-body {
-    padding: 16px;
+    padding: 12px 16px calc(76px + env(safe-area-inset-bottom, 0px)) 16px !important;
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   /* Provide space at bottom so content is never obscured by bottom bar */
@@ -911,12 +966,73 @@ body {
   }
 
   .panel {
-    padding: 18px 16px;
+    padding: 16px 14px;
+    border-radius: var(--radius-md);
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .panel-header {
     flex-wrap: wrap;
     gap: 10px;
+  }
+
+  /* Data list items on mobile */
+  .list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .list-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .list-left > div:not(.item-icon) {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .item-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    flex-shrink: 0;
+  }
+
+  .item-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-desc {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-amount {
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-align: right;
   }
 
   /* Form inputs 16px to prevent iOS auto-zoom viewport jump */
@@ -1015,28 +1131,57 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .metric-card {
     padding: 14px 12px;
+    min-width: 0;
+    border-radius: var(--radius-md);
   }
 
-  .metric-value {
-    font-size: 1.35rem;
+  .metric-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    gap: 4px;
   }
 
   .metric-title {
-    font-size: 0.7rem;
-  }
-
-  .metric-subtitle {
     font-size: 0.68rem;
-    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 
   .metric-icon-wrap {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    flex-shrink: 0;
+  }
+
+  .metric-icon-wrap svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .metric-value {
+    font-size: 1.22rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .metric-subtitle {
+    font-size: 0.65rem;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Bottom sheet modal styling */

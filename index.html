@@ -68,18 +68,6 @@
 </head>
 <body class="auth-mode">
   <div class="app-container">
-    <!-- Mobile Header -->
-    <header class="mobile-header">
-      <button id="btn-mobile-menu" class="btn-outline btn-sm" aria-label="Open menu">
-        <i data-lucide="menu"></i>
-      </button>
-      <div class="sidebar-brand" style="border: none; padding: 0;">
-        <div class="brand-icon"><i data-lucide="wallet"></i></div>
-        <span class="brand-name"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
-      </div>
-      <div style="width: 32px;"></div>
-    </header>
-
     <!-- Sidebar Overlay for Mobile -->
     <div id="sidebar-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 35;"></div>
 
@@ -151,6 +139,20 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
+      <!-- Mobile Top App Header (Visible only on mobile <= 768px) -->
+      <header class="mobile-header">
+        <button id="btn-mobile-menu" class="mobile-icon-btn" aria-label="Open navigation menu">
+          <i data-lucide="menu"></i>
+        </button>
+        <div class="mobile-brand">
+          <div class="brand-icon" style="width: 28px; height: 28px;"><i data-lucide="wallet" style="width: 15px; height: 15px;"></i></div>
+          <span class="brand-name" style="font-size: 1.05rem;"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
+        </div>
+        <button class="mobile-icon-btn" onclick="openTransactionModal()" aria-label="Add transaction" title="Add transaction">
+          <i data-lucide="plus" style="color: var(--accent-primary);"></i>
+        </button>
+      </header>
+
       <!-- Dynamic Top App Header -->
       <header class="app-header">
         <div class="header-title">
