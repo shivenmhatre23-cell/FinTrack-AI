@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <!-- Primary Meta Tags -->
   <title>FinTrack AI — Smart Personal Finance & AI Spending Insights</title>
   <meta name="title" content="FinTrack AI — Smart Personal Finance & AI Spending Insights" />
@@ -86,10 +86,15 @@
     <!-- Sidebar Navigation -->
     <aside id="sidebar" class="sidebar">
       <div class="sidebar-brand">
-        <div class="brand-icon">
-          <i data-lucide="wallet"></i>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="brand-icon">
+            <i data-lucide="wallet"></i>
+          </div>
+          <span class="brand-name"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
         </div>
-        <span class="brand-name"><span class="logo-fin">FIN</span><span class="logo-track">TRACK</span> <span class="badge-ai">AI</span></span>
+        <button id="btn-sidebar-close" class="btn-sidebar-close" aria-label="Close menu">
+          <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
@@ -692,6 +697,30 @@
       </div>
     </div>
   </div>
+
+  <!-- Mobile Bottom Tab Navigation -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <a class="mobile-nav-item active" data-view="dashboard" href="#dashboard">
+      <i data-lucide="layout-dashboard"></i>
+      <span>Home</span>
+    </a>
+    <a class="mobile-nav-item" data-view="transactions" href="#transactions">
+      <i data-lucide="receipt"></i>
+      <span>Activity</span>
+    </a>
+    <a class="mobile-nav-item" data-view="budgets" href="#budgets">
+      <i data-lucide="trending-up"></i>
+      <span>Budgets</span>
+    </a>
+    <a class="mobile-nav-item" data-view="goals" href="#goals">
+      <i data-lucide="target"></i>
+      <span>Goals</span>
+    </a>
+    <a class="mobile-nav-item" data-view="insights" href="#insights">
+      <i data-lucide="sparkles"></i>
+      <span>AI Insights</span>
+    </a>
+  </nav>
 
   <!-- Toast Notification Container -->
   <div id="toast-container" class="toast-container"></div>

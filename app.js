@@ -180,6 +180,12 @@ function switchView(viewName) {
     link.classList.toggle("active", link.getAttribute("data-view") === viewName);
   });
 
+  // Synchronize active state for mobile bottom tab bar
+  const bottomNavItems = document.querySelectorAll(".mobile-bottom-nav .mobile-nav-item");
+  bottomNavItems.forEach((item) => {
+    item.classList.toggle("active", item.getAttribute("data-view") === viewName);
+  });
+
   state.activeView = viewName;
   if (state.user) {
     updateHeader(viewName);
@@ -200,13 +206,16 @@ function updateHeader(viewName) {
   };
 
   const info = titles[viewName] || titles.dashboard;
-  document.getElementById("header-page-title").innerText = info.title;
-  document.getElementById("header-page-subtitle").innerText = info.sub;
+  const titleEl = document.getElementById("header-page-title");
+  const subEl = document.getElementById("header-page-subtitle");
+  if (titleEl) titleEl.innerText = info.title;
+  if (subEl) subEl.innerText = info.sub;
 }
 
-// Mobile sidebar controls
+// Mobile sidebar & bottom navigation controls
 function setupMobileDrawer() {
   const menuBtn = document.getElementById("btn-mobile-menu");
+  const closeBtn = document.getElementById("btn-sidebar-close");
   const overlay = document.getElementById("sidebar-overlay");
   const sidebar = document.getElementById("sidebar");
 
@@ -214,10 +223,26 @@ function setupMobileDrawer() {
     menuBtn.addEventListener("click", () => {
       sidebar.classList.add("open");
       overlay.style.display = "block";
+      document.body.style.overflow = "hidden"; // Lock background scrolling
     });
 
     overlay.addEventListener("click", closeMobileSidebar);
   }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeMobileSidebar);
+  }
+
+  // Setup mobile bottom tab clicks
+  const bottomNavItems = document.querySelectorAll(".mobile-bottom-nav .mobile-nav-item");
+  bottomNavItems.forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const view = item.getAttribute("data-view");
+      if (view) {
+        switchView(view);
+      }
+    });
+  });
 }
 
 function closeMobileSidebar() {
@@ -225,6 +250,7 @@ function closeMobileSidebar() {
   const overlay = document.getElementById("sidebar-overlay");
   if (sidebar) sidebar.classList.remove("open");
   if (overlay) overlay.style.display = "none";
+  document.body.style.overflow = ""; // Restore scrolling
 }
 
 // ==================== AUTHENTICATION ====================
